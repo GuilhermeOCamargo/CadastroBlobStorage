@@ -1,0 +1,125 @@
+﻿@model FormCadastro.Models.Pessoa
+<!--INICIO MODAL-->
+<div id="modalForm" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <!--CONTEÚDO DO MODAL-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <!--TÍTULO DO MODAL-->
+                <h4 class="modal-title">Cadastrar</h4>
+            </div>
+            <div class="modal-body">
+                <!--FORMULÁRIO DE CADASTRO-->
+                <form id="form_Cadastro" method="post">
+                    <div class="row">
+                        <div id="div_input_id" class="form-group col-sm-2">
+                            <label for="txt_id">Id:</label>
+                            <br>
+                            <input type="text" name="id" id="id" readonly="true" class="form-control" value="@Model.Id">
+                        </div>
+                        <div id="div_input_nome" class="form-group col-sm-10">
+                            <label for="txt_nome">Nome:</label>
+                            <br>
+                            <input type="text" name="nome" id="nome" spellcheck="false" class="form-control" value="@Model.Nome">
+                        </div>
+                    </div>
+                      
+                    <div id="div_input_email" class="form-group">
+                        <label for="txt_email">E-mail:</label>
+                        <br>
+                        <input type="text" name="email" id="email" class="form-control" value="@Model.Email">
+                    </div>
+                    <div id="div_input_foto" class="form-group">
+                        <label for="Foto">Foto:</label>
+                        <input type="file" id="Foto" name="Foto" accept="image/jpeg" class="form-control-file   "/>
+                    </div>
+                    <br>
+                    <div>
+                        <button type="submit" class="btn btn-primary" id="btnSalvar">Salvar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-primary" id="btnSalvar">Save changes</button>-->
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.FIM MODAL -->
+<script type="text/javascript">
+    (function ()
+    {
+		var expr = /[0-9]/;
+		var brancos = /^\s+|\s+$/g;
+		var email = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
+        window.trim = function (x)
+        {
+			return x.replace(brancos, "");
+		}
+        $.validator.addMethod("nomeCompleto", function (value, element)
+        {
+			if (!value.length)
+				return true;
+			if (value.match(expr))
+				return false;
+			var ntrim = trim(value);
+			if (!ntrim.length)
+				return false;
+			return (ntrim.indexOf(" ") > 0);
+		}, "Nome completo inválido!");
+        $.validator.addMethod("emailValido", function (value, element)
+        {
+            if (!value.length)
+                return true;
+            if (value.match(email))
+                return true;
+        }, "E-mail inválido!");
+	})();
+    //BOTÃO SALVAR
+    //VALIDANDO OS DADOS
+    $("#form_Cadastro").validate(
+        {
+            rules: {
+                nome: {
+                    required: true,
+                    nomeCompleto: true
+                },
+                email: {
+                    required: true,
+                    emailValido: true
+                },
+            },
+            submitHandler: function (form)
+            {
+                // Aqui, tudo está válido!
+                //fazer ajax para salvar tudo e renderizar a tabela
+                $.ajax({
+                    url: "/Cadastro/Upload",
+                    method: "post",
+                    data: new FormData(document.getElementById("form_Cadastro")),
+                    contentType: false,
+                    processData: false,
+                    success: function (dados) {
+                        $.ajax({
+                            method: 'get',
+                            url: '/Cadastro/Tabela',
+                            cache: false,
+                            contentType: 'text/html',
+                            success: function (data) {
+                                $("#div_tabela").html(data);
+
+                            },
+                            error: function (e) {
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert("Erro");
+                    }
+                });
+            }
+        });
+</script>

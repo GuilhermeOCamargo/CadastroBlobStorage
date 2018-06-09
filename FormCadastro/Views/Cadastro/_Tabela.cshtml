@@ -1,0 +1,62 @@
+﻿@model List<FormCadastro.Models.Pessoa>
+<table id="tabela" class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Foto</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@Model[i].Id</td>
+                    <td></td>
+                    <td>@Model[i].Nome</td>
+                    <td>@Model[i].Email</td>
+                    <td><button type='button' onclick='editar(this)'>Editar</button></td>
+                    <td><button type='button' onclick='excluir(this)'>Excluir</button></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    function excluir(elemento) {
+        //$("#elemento").parent().parent().remove();
+        elemento.parentNode.parentNode.parentNode.removeChild(elemento.parentNode.parentNode);
+    }
+
+    function editar(elemento) {
+
+        //PEGAR ELEMENTOS
+        elementoTabela = elemento.parentNode.parentNode;
+
+        $(elementoTabela).find("td").each(function (i) {
+
+            if (i < 4) {
+                valores[i] = $(this).text();
+
+            }
+        });
+        //ABRIR MODAL
+        btnNovo.onclick();
+
+        //ATRIBUIR VALORES AO FORMULÁRIO
+
+
+        $("#form_Cadastro txt_id");
+        txt_id.value = valores[0];
+        txt_nome.value = valores[1];
+        txt_email.value = valores[2];
+        txt_nascimento.value = valores[3];
+
+
+    }
+</script>

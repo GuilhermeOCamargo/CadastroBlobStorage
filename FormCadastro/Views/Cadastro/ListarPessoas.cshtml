@@ -1,0 +1,82 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.min.css" />
+</head>
+<body>
+    <div id="modalContent"></div>
+    <div id="" class="wrapper">
+        <div class="container">
+            <div class="row" id="div_cabecalho">
+                <div class="col-lg-12 header_custom">
+                    <h1 class="text-center"><strong>Cadastro de Pessoas</strong></h1>
+                </div>
+                
+            </div>
+            <div id="div_corpo" class="row">
+                <div class="">
+                    <button type="button" id="btnNovo" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span> Novo
+                    </button>
+                </div>
+               
+                    <div id="div_tabela" class="div_tabela">
+                        
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/assets/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+            "use strict";
+            var btnNovo = document.getElementById("btnNovo");
+            var cont = 0;
+            var elementoTabela;
+            var valores = new Array();
+        var id;
+        $(document).ready(function () {
+            $.ajax({
+                method: 'get',
+                url: '/Cadastro/Tabela',
+                cache: false,
+                contentType: 'text/html',
+                success: function (data) {
+                    $("#div_tabela").html(data);
+                   
+                },
+                error: function (e) {
+                }
+            });
+        });
+            //ABRINDO O MODAL
+        btnNovo.onclick = function () {
+            $.ajax({
+                method: 'get',
+                url: '/Cadastro/ModalCadastro',
+                cache: false,
+                contentType: 'text/html',
+                success: function (data) {
+                    $("#modalContent").html(data);
+                    $("#modalForm").modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                },
+                error: function (e) {
+                }
+            });
+        };
+    </script>
+</body>
+</html>
